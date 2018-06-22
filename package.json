@@ -1,0 +1,14 @@
+{
+  "name": "twittercord",
+  "version": "1.0.0",
+  "description": "Discord to Twitter DM bridge",
+  "main": "index.js",
+  "repository": "https://github.com/comp500/twittercord.git",
+  "author": "comp500 <comp500@users.noreply.github.com>",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "discord.js": "^11.3.2",
+    "twitter": "^1.7.1"
+  }
+}
