@@ -49,11 +49,20 @@ discordClient.on("ready", () => {
 });
 
 discordClient.on("message", msg => {
+	if (msg.content.trim().length < 1) return;
+
 	twitterClient.post(
-		"direct_messages/new",
+		"direct_messages/events/new",
 		{
-			screen_name: config.user,
-			text: msg
+			type: "message_create",
+			message_create: {
+				target: {
+					recipient_id: config.user
+				},
+				message_data: {
+					text: msg.content
+				}
+			}
 		},
 		e => {
 			if (e) {
