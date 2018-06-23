@@ -1,13 +1,13 @@
 // Requires stuff
 const fs = require("fs");
-const Twitter = require("twitter");
+const Twit = require("twit");
 const Discord = require("discord.js");
 
 // Load config
 let config = {
 	consumer_key: process.env.TWITTER_CONSUMER_KEY,
 	consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
-	access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
+	access_token: process.env.TWITTER_ACCESS_TOKEN,
 	access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET,
 	discord_token: process.env.DISCORD_TOKEN,
 	user: process.env.TWITTER_USER
@@ -34,11 +34,13 @@ if (!isConfigured) {
 	config = data;
 }
 
-const twitterClient = new Twitter({
+const twitterClient = new Twit({
 	consumer_key: config.consumer_key,
 	consumer_secret: config.consumer_secret,
-	access_token_key: config.access_token_key,
-	access_token_secret: config.access_token_secret
+	access_token: config.access_token,
+	access_token_secret: config.access_token_secret,
+	timeout_ms: 60 * 1000,
+	strictSSL: true
 });
 const discordClient = new Discord.Client();
 
@@ -47,20 +49,21 @@ discordClient.on("ready", () => {
 });
 
 discordClient.on("message", msg => {
+	twitterClient.post(
+		"direct_messages/new",
+		{
+			screen_name: config.user,
+			text: msg
+		},
+		e => {
+			if (e) {
+				throw new Error(e.message);
+			}
+		}
+	);
+
 	if (msg.content === "ping") {
 		msg.reply("Pong!");
-		twitterClient.post(
-			"direct_messages/new",
-			{
-				screen_name: config.user,
-				text: "test message"
-			},
-			
-			(e, a) => {
-				console.log(e);
-				console.log(a);
-			}
-		);
 	}
 });
 

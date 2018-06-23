@@ -9,6 +9,6 @@
   "private": false,
   "dependencies": {
     "discord.js": "^11.3.2",
-    "twitter": "^1.7.1"
+    "twit": "^2.2.10"
   }
 }
